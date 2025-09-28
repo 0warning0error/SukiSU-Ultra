@@ -6,6 +6,11 @@
 
 #define KSU_SU_VERIFIED_BIT (1UL << 0)
 
+struct su_request_arg {
+    pid_t target_pid;
+    const char __user *user_password;
+};
+
 static inline bool ksu_is_current_verified(void)
 {
     return ((unsigned long)(current->security) & KSU_SU_VERIFIED_BIT) != 0;

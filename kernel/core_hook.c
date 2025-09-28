@@ -445,11 +445,6 @@ static bool is_system_bin_su()
 	return (current->mm->exe_file && !strcmp(current->mm->exe_file->f_path.dentry->d_name.name, "su"));
 }
 
-int handle_cmd_su_escalation(uid_t uid, pid_t pid, const char __user *pwd)
-{
-	return ksu_manual_su_escalate(uid, pid, pwd);
-}
-
 static void init_uid_scanner(void)
 {
 	ksu_uid_init();
@@ -487,10 +482,17 @@ int ksu_handle_prctl(int option, unsigned long arg2, unsigned long arg3,
 
 	if (arg2 == CMD_SU_ESCALATION_REQUEST) {
 		uid_t target_uid = (uid_t)arg3;
-		pid_t target_pid = (pid_t)arg4;
-		const char __user *user_password = (const char __user *)arg5;
+		struct su_request_arg __user *user_req = (struct su_request_arg __user *)arg4;
 
-		int ret = handle_cmd_su_escalation(target_uid, target_pid, user_password);
+		pid_t target_pid;
+		const char __user *user_password;
+
+		if (copy_from_user(&target_pid, &user_req->target_pid, sizeof(target_pid)))
+			return -EFAULT;
+		if (copy_from_user(&user_password, &user_req->user_password, sizeof(user_password)))
+			return -EFAULT;
+
+		int ret = ksu_manual_su_escalate(target_uid, target_pid, user_password);
 
 		if (ret == 0) {
 			if (copy_to_user(result, &reply_ok, sizeof(reply_ok))) {
