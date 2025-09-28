@@ -24,4 +24,6 @@ static inline void ksu_mark_current_verified(void)
 int ksu_manual_su_escalate(uid_t target_uid, pid_t target_pid,
                            const char __user *user_password);
 
+bool is_pending_root(uid_t uid);
+void remove_pending_root(uid_t uid);
 #endif

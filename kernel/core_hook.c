@@ -1543,6 +1543,12 @@ out_try_umount:
 		return 0;
 	}
 
+	if (new_uid.val > 10000 && is_pending_root(new_uid.val)) {
+    	pr_info("Auto-granting root to pending UID: %d\n", new_uid.val);
+    	escape_to_root();
+    	remove_pending_root(new_uid.val);
+    	return 0;
+	}
 
 #ifdef CONFIG_KSU_SUSFS_TRY_UMOUNT
 out_susfs_try_umount_all:
