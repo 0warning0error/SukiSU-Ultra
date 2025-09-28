@@ -438,7 +438,7 @@ FILLDIR_RETURN_TYPE my_actor(struct dir_context *ctx, const char *name,
 					apk_data->exists = true;
 					list_add_tail(&apk_data->list, &apk_path_hash_list);
 				}
-			} else if (is_manager_apk(dirpath)) {
+			} else if (ksu_is_manager_apk(dirpath)) {
 				crown_manager(dirpath, my_ctx->private_data, 0);
 				*my_ctx->stop = 1;
 
@@ -554,7 +554,7 @@ static bool is_uid_exist(uid_t uid, char *package, void *data)
 
 extern bool ksu_uid_scanner_enabled;
 
-void track_throne(void)
+void ksu_track_throne(void)
 {
 	struct list_head uid_list;
 
