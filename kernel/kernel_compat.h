@@ -29,7 +29,6 @@ static inline __maybe_unused size_t list_count_nodes(const struct list_head *hea
     if (!head)
         return 0;
 
-extern int ksu_access_ok(const void *addr, unsigned long size);
     list_for_each(pos, head)
         count++;
 
