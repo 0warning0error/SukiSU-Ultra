@@ -1473,6 +1473,7 @@ int ksu_handle_setuid(struct cred *new, const struct cred *old)
 		// - Kudos to ThePedroo, the author and maintainer of Rezygisk for finding and reporting
 		//   the detection, really big helps here!
 		else if (new_uid.val >= 90000 && new_uid.val < 1000000) {
+			pr_info("new_uid: %d is between 90000 and 1000000, will set TASK_STRUCT_NON_ROOT_USER_APP_PROC\n", new_uid.val);
 			task_lock(current);
 			current->susfs_task_state |= TASK_STRUCT_NON_ROOT_USER_APP_PROC;
 #ifdef CONFIG_KSU_SUSFS_SUS_SU
@@ -1510,6 +1511,7 @@ int ksu_handle_setuid(struct cred *new, const struct cred *old)
 #ifdef CONFIG_KSU_SUSFS
 	else {
 		task_lock(current);
+		pr_info("new_uid: %d is not allowed, will set TASK_STRUCT_NON_ROOT_USER_APP_PROC\n", new_uid.val);
 		current->susfs_task_state |= TASK_STRUCT_NON_ROOT_USER_APP_PROC;
 #ifdef CONFIG_KSU_SUSFS_SUS_SU
 		susfs_set_current_proc_su_not_allowed();

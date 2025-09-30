@@ -16,7 +16,7 @@ bool getenforce(void);
 
 bool is_ksu_domain(void);
 
-bool is_zygote(void *cred);
+bool ksu_is_zygote(void *cred);
 
 void apply_kernelsu_rules(void);
 
